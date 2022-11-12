@@ -1,0 +1,18 @@
+#boardTTT {
+    width: 900px;
+    height: 900px;
+    border: 2px solid black;
+    display: flex;
+    flex-wrap: wrap;
+}
+.tttCard {
+    width: 300px;
+}
+
+.tttX {
+    background-color: blue;
+}
+
+.tttO {
+    background-color: red;
+}
