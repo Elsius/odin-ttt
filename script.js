@@ -23,7 +23,7 @@ const ticTacToe = (function () {
             if (boardState[index] == 0) {
                 boardState[index] = playerTurn
                 render()
-                checkWin(index)
+                checkWin()
             } else {
                 console.log(`section ${index} is taken`)
             }
@@ -43,24 +43,38 @@ const ticTacToe = (function () {
                 }
             }
         },
-        checkWin = function (indexLastClicked) {
+        checkWin = function () {
             //loops through win conditions
-            let win
-            console.log()
-            //check last clicked?
-
             //check the 3 possible win conditions?
             //check diagonals
-            if (indexLastClicked % 2 == 0) {
-                if (boardState[0] == playerTurn &&
-                    boardState[4] == playerTurn &&
-                    boardState[8] == playerTurn ||
-                    boardState[2] == playerTurn &&
-                    boardState[4] == playerTurn &&
-                    boardState[6] == playerTurn) {
-                    console.log(`Player ${playerTurn} wins!`)}
+            if (boardState[0] == playerTurn &&
+                boardState[4] == playerTurn &&
+                boardState[8] == playerTurn ||
+                boardState[2] == playerTurn &&
+                boardState[4] == playerTurn &&
+                boardState[6] == playerTurn) {
+                console.log(`Player ${playerTurn} wins!`)
             }
-            
+            //check horizontal
+            for (i = 0; i < 3; i++) {
+                let row = i * 3
+                if (boardState[0 + row] == playerTurn &&
+                    boardState[1 + row] == playerTurn &&
+                    boardState[2 + row] == playerTurn) {
+                    console.log(`row ${row}!`)
+                }
+
+            }
+            //check vertical
+            for (i = 0; i < 3; i++){
+                if (boardState[i] == playerTurn &&
+                    boardState[i+3] == playerTurn &&
+                    boardState[i+6] == playerTurn){
+                        console.log(`column!`)
+                    }
+            }
+
+            //change turns after checking for win
             if (playerTurn == 1) {
                 playerTurn = 2
             } else {
@@ -71,10 +85,10 @@ const ticTacToe = (function () {
             clearBoard()
             newBoard()
         };
-        checkState = function() {
-            console.log(boardState)
-        }
-    return { init, checkState}
+    checkState = function () {
+        console.log(boardState)
+    }
+    return { init, checkState }
 })()
 
 ticTacToe.init()
