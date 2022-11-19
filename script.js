@@ -1,5 +1,7 @@
 const ticTacToe = (function () {
     let board = document.getElementById('boardTTT'),
+        player1ScoreBoard = document.getElementById('player1score'),
+        player2ScoreBoard = document.getElementById('player2score'),
         boardState = [],
         playerTurn = 1,
         player1Score = 0,
@@ -14,6 +16,7 @@ const ticTacToe = (function () {
                 card.addEventListener('click', clickBoard.bind(card, i))
                 boardState.push(0);
             }
+            playerTurn = 1
         },
         clearBoard = function () {
             board.innerHTML = ''
@@ -43,6 +46,9 @@ const ticTacToe = (function () {
                         break;
                 }
             }
+            //update DOM on player turn/stats
+            player1ScoreBoard.textContent = player1Score;
+            player2ScoreBoard.textContent = player2Score;
         },
         checkWin = function () {
             let victoryState = 0;
@@ -53,7 +59,7 @@ const ticTacToe = (function () {
                 boardState[2] == playerTurn &&
                 boardState[4] == playerTurn &&
                 boardState[6] == playerTurn) {
-                    victoryState = 1
+                victoryState = 1
             }
             //check horizontal
             for (i = 0; i < 3; i++) {
@@ -61,26 +67,26 @@ const ticTacToe = (function () {
                 if (boardState[0 + row] == playerTurn &&
                     boardState[1 + row] == playerTurn &&
                     boardState[2 + row] == playerTurn) {
-                        victoryState = 1
+                    victoryState = 1
                 }
 
             }
             //check vertical
-            for (i = 0; i < 3; i++){
+            for (i = 0; i < 3; i++) {
                 if (boardState[i] == playerTurn &&
-                    boardState[i+3] == playerTurn &&
-                    boardState[i+6] == playerTurn){
-                        victoryState = 1
-                    }
+                    boardState[i + 3] == playerTurn &&
+                    boardState[i + 6] == playerTurn) {
+                    victoryState = 1
+                }
             }
             //check tie
-            if (!boardState.includes(0)){
-                if (!victoryState == 1){
+            if (!boardState.includes(0)) {
+                if (!victoryState == 1) {
                     victoryState = 2
                 }
             }
-            if (!victoryState == 0){
-                gameEnd(victoryState,playerTurn)
+            if (!victoryState == 0) {
+                gameEnd(victoryState, playerTurn)
             }
             //change turns after checking for win
             if (playerTurn == 1) {
@@ -89,20 +95,32 @@ const ticTacToe = (function () {
                 playerTurn = 1
             }
         },
-        gameEnd = function(gameVictoryState,lastPlayer) {
+        gameEnd = function (gameVictoryState, lastPlayer) {
+            //clone elements to remove event listeners
+            board.innerHTML = board.innerHTML
             //tie
-            if (gameVictoryState == 2){
-                //tie
+            if (gameVictoryState == 2) {
+                //tie, open menu for new game
             }
             //win
             else {
-                //win
+                //win, increment score, open menu for new game
+                switch (lastPlayer) {
+                    case 1:
+                        player1Score++;
+                        break;
+                    case 2:
+                        player2Score++;
+                        break;
+                }
+
             }
+            render()
         },
         init = function () {
             clearBoard()
             newBoard()
         };
-    return { init,  }
+    return { init, }
 })()
 
