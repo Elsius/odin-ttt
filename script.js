@@ -120,7 +120,15 @@ const ticTacToe = (function () {
         gameEnd = function (gameVictoryState, lastPlayer) {
             //clone elements to remove event listeners
             board.innerHTML = board.innerHTML
-            let winner = '';
+            //create elements
+            let menu = document.createElement('div'),
+            menuMessage = document.createElement('div'),
+            buttonContainer = document.createElement('div'),
+            newgameButton = document.createElement('button'),
+            restartGameButton = document.createElement('button'),
+            endMessage = '',
+            winner = '';
+            //determine winner
             if (lastPlayer == 1) {
                 winner = p1Name
             }else{
@@ -128,11 +136,11 @@ const ticTacToe = (function () {
             }
             //tie
             if (gameVictoryState == 'tie') {
-                //tie
+                endMessage = 'Draw!'
             }
             //win
             else {
-                //win, increment score
+                endMessage = `${winner} wins!`
                 switch (lastPlayer) {
                     case 1:
                         player1Score++;
@@ -145,16 +153,10 @@ const ticTacToe = (function () {
             }
             //create menu for new game
             //need functions on buttons and css for the menu
-            //create elements
-            let menu = document.createElement('div'),
-                menuMessage = document.createElement('div'),
-                buttonContainer = document.createElement('div'),
-                newgameButton = document.createElement('button'),
-                restartGameButton = document.createElement('button');
             //adjust elements
             menu.id = "gameOver"
             buttonContainer.id = "tttButtonBox"
-            menuMessage.textContent = `${winner} wins!`
+            menuMessage.textContent = endMessage
             newgameButton.addEventListener('click', ticTacToe.init)
             newgameButton.textContent = `New Game`
             restartGameButton.textContent = `Reset Game`
