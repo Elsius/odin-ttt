@@ -1,4 +1,5 @@
 const ticTacToe = (function () {
+    //need a cache function for all these vars
     let board = document.getElementById('boardTTT'),
         player1ScoreBoard = document.getElementById('player1score'),
         player2ScoreBoard = document.getElementById('player2score'),
@@ -6,27 +7,39 @@ const ticTacToe = (function () {
         playerTurn = 1,
         player1Score = 0,
         player2Score = 0,
-        newBoard = function () {
-            //create board elements, looped 9x for each button
-            for (i = 0; i < 9; i++) {
-                let card = document.createElement('div');
-                card.textContent = ''
-                card.classList.add('tttCard')
-                board.appendChild(card)
-                card.addEventListener('click', clickBoard.bind(card, i))
-                boardState.push(0);
-            }
-            playerTurn = 1
-        },
+        p1Name = '',
+        p2Name = '',
+        enterNames = function () {
+            let player1NameElem = document.getElementById('player1Name'),
+                player1NameInp = document.getElementById('player1NameInp'),
+                player2NameInp = document.getElementById('player2NameInp'),
+                player2NameElem = document.getElementById('player2Name');
+            player1NameElem.textContent = player1NameInp.value
+            p1Name = player1NameInp.value
+            player2NameElem.textContent = player2NameInp.value
+            p2Name = player2NameInp.value
+        }
+    newBoard = function () {
+        //create board elements, looped 9x for each button
+        for (i = 0; i < 9; i++) {
+            let card = document.createElement('div');
+            card.textContent = ''
+            card.classList.add('tttCard')
+            board.appendChild(card)
+            card.addEventListener('click', clickBoard.bind(card, i))
+            boardState.push(0);
+        }
+        playerTurn = 1
+    },
         clearBoard = function (fullclear = 0) {
             board.innerHTML = '';
             boardState = [];
-            if (fullclear == 1){
+            if (fullclear == 1) {
                 fullclear = 0
                 player1Score = 0
                 player2Score = 0
                 render()
-                
+
             }
         },
         clickBoard = function (index) {
@@ -107,6 +120,12 @@ const ticTacToe = (function () {
         gameEnd = function (gameVictoryState, lastPlayer) {
             //clone elements to remove event listeners
             board.innerHTML = board.innerHTML
+            let winner = '';
+            if (lastPlayer == 1) {
+                winner = p1Name
+            }else{
+                winner = p2Name
+            }
             //tie
             if (gameVictoryState == 'tie') {
                 //tie
@@ -132,25 +151,26 @@ const ticTacToe = (function () {
                 buttonContainer = document.createElement('div'),
                 newgameButton = document.createElement('button'),
                 restartGameButton = document.createElement('button');
-                //adjust elements
-                menu.id = "gameOver"
-                buttonContainer.id = "tttButtonBox"
-                menuMessage.textContent = `Player ${lastPlayer} wins!`
-                newgameButton.addEventListener('click', ticTacToe.init)
-                newgameButton.textContent = `New Game`
-                restartGameButton.textContent = `Reset Game`
-                restartGameButton.addEventListener('click', ticTacToe.init.bind(this, 1))
-                //append elements
-                menu.appendChild(menuMessage)
-                menu.appendChild(buttonContainer)
-                buttonContainer.appendChild(newgameButton)
-                buttonContainer.appendChild(restartGameButton)
-                board.appendChild(menu)
+            //adjust elements
+            menu.id = "gameOver"
+            buttonContainer.id = "tttButtonBox"
+            menuMessage.textContent = `${winner} wins!`
+            newgameButton.addEventListener('click', ticTacToe.init)
+            newgameButton.textContent = `New Game`
+            restartGameButton.textContent = `Reset Game`
+            restartGameButton.addEventListener('click', ticTacToe.init.bind(this, 1))
+            //append elements
+            menu.appendChild(menuMessage)
+            menu.appendChild(buttonContainer)
+            buttonContainer.appendChild(newgameButton)
+            buttonContainer.appendChild(restartGameButton)
+            board.appendChild(menu)
             render()
         },
         init = function (fullclear) {
             clearBoard(fullclear)
             newBoard()
+            enterNames()
         };
     return { init, }
 })()
