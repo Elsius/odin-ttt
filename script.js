@@ -10,7 +10,7 @@ const ticTacToe = (function () {
             //create board elements, looped 9x for each button
             for (i = 0; i < 9; i++) {
                 let card = document.createElement('div');
-                card.textContent = 'x'
+                card.textContent = ''
                 card.classList.add('tttCard')
                 board.appendChild(card)
                 card.addEventListener('click', clickBoard.bind(card, i))
@@ -18,9 +18,16 @@ const ticTacToe = (function () {
             }
             playerTurn = 1
         },
-        clearBoard = function () {
-            board.innerHTML = ''
-            boardState = []
+        clearBoard = function (fullclear = 0) {
+            board.innerHTML = '';
+            boardState = [];
+            if (fullclear == 1){
+                fullclear = 0
+                player1Score = 0
+                player2Score = 0
+                render()
+                
+            }
         },
         clickBoard = function (index) {
             //index = if 0, change to current player turn and update, else send error
@@ -51,7 +58,7 @@ const ticTacToe = (function () {
             player2ScoreBoard.textContent = player2Score;
         },
         checkWin = function () {
-            let victoryState = 0;
+            let victoryState = '';
             //check diagonals
             if (boardState[0] == playerTurn &&
                 boardState[4] == playerTurn &&
@@ -59,7 +66,7 @@ const ticTacToe = (function () {
                 boardState[2] == playerTurn &&
                 boardState[4] == playerTurn &&
                 boardState[6] == playerTurn) {
-                victoryState = 1
+                victoryState = 'win';
             }
             //check horizontal
             for (i = 0; i < 3; i++) {
@@ -67,7 +74,7 @@ const ticTacToe = (function () {
                 if (boardState[0 + row] == playerTurn &&
                     boardState[1 + row] == playerTurn &&
                     boardState[2 + row] == playerTurn) {
-                    victoryState = 1
+                    victoryState = 'win'
                 }
 
             }
@@ -76,17 +83,18 @@ const ticTacToe = (function () {
                 if (boardState[i] == playerTurn &&
                     boardState[i + 3] == playerTurn &&
                     boardState[i + 6] == playerTurn) {
-                    victoryState = 1
+                    victoryState = 'win'
                 }
             }
             //check tie
             if (!boardState.includes(0)) {
                 if (!victoryState == 1) {
-                    victoryState = 2
+                    victoryState = 'tie'
                 }
             }
-            if (!victoryState == 0) {
-                gameEnd(victoryState, playerTurn)
+            if (!victoryState == '') {
+                gameEnd(victoryState, playerTurn);
+                victoryState = '';
             }
             //change turns after checking for win
             if (playerTurn == 1) {
@@ -94,17 +102,18 @@ const ticTacToe = (function () {
             } else {
                 playerTurn = 1
             }
+            victoryState = ''
         },
         gameEnd = function (gameVictoryState, lastPlayer) {
             //clone elements to remove event listeners
             board.innerHTML = board.innerHTML
             //tie
-            if (gameVictoryState == 2) {
-                //tie, open menu for new game
+            if (gameVictoryState == 'tie') {
+                //tie
             }
             //win
             else {
-                //win, increment score, open menu for new game
+                //win, increment score
                 switch (lastPlayer) {
                     case 1:
                         player1Score++;
@@ -115,10 +124,32 @@ const ticTacToe = (function () {
                 }
 
             }
+            //create menu for new game
+            //need functions on buttons and css for the menu
+            //create elements
+            let menu = document.createElement('div'),
+                menuMessage = document.createElement('div'),
+                buttonContainer = document.createElement('div'),
+                newgameButton = document.createElement('button'),
+                restartGameButton = document.createElement('button');
+                //adjust elements
+                menu.id = "gameOver"
+                buttonContainer.id = "tttButtonBox"
+                menuMessage.textContent = `Player ${lastPlayer} wins!`
+                newgameButton.addEventListener('click', ticTacToe.init)
+                newgameButton.textContent = `New Game`
+                restartGameButton.textContent = `Reset Game`
+                restartGameButton.addEventListener('click', ticTacToe.init.bind(this, 1))
+                //append elements
+                menu.appendChild(menuMessage)
+                menu.appendChild(buttonContainer)
+                buttonContainer.appendChild(newgameButton)
+                buttonContainer.appendChild(restartGameButton)
+                board.appendChild(menu)
             render()
         },
-        init = function () {
-            clearBoard()
+        init = function (fullclear) {
+            clearBoard(fullclear)
             newBoard()
         };
     return { init, }
